@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Speech-to-Text Example</title>
+</head>
+<body>
+  <h1>Speech-to-Text Example</h1>
+  
+  <button id="startRecording" onclick="startRecording()">Start Recording</button>
+  <button id="stopRecording" onclick="stopRecording()">Stop Recording</button>
+
+  <div id="transcription"></div>
+
+  <script>
+    let recognition;
+    let isRecording = false;
+
+    function startRecording() {
+      recognition = new webkitSpeechRecognition() || new SpeechRecognition();
+      recognition.continuous = true;
+      recognition.interimResults = true;
+
+      recognition.onresult = function (event) {
+        let result = event.results[event.results.length - 1];
+        let transcript = result[0].transcript;
+        document.getElementById('transcription').innerText = transcript;
+      };
+
+      recognition.onerror = function (event) {
+        console.error('Speech recognition error:', event.error);
+      };
+
+      recognition.onend = function () {
+        if (isRecording) {
+          startRecording(); // Restart recognition if still recording
+        }
+      };
+
+      recognition.start();
+      isRecording = true;
+      document.getElementById('transcription').innerText = 'Listening...';
+    }
+
+    function stopRecording() {
+      if (recognition) {
+        recognition.stop();
+        isRecording = false;
+        document.getElementById('transcription').innerText = 'Recording stopped.';
+      }
+    }
+  </script>
+</body>
+</html>

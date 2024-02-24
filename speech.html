@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speech to Text Demo</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+        }
+        .controls {
+            margin-bottom: 20px;
+        }
+        #transcription {
+            padding: 10px;
+            margin-bottom: 10px;
+            width: 80%;
+            max-width: 1000px;
+            text-align: center;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 0 5px;
+            background-color: black;
+            color: gray;
+            border: 2px solid gray; /* Add a white border */
+            border-radius: 15px;
+        }
+
+    </style>
+</head>
+<body>
+    
+    <div id="transcription"  style="margin-bottom: 200px; font-size: 2rem; padding-left: 250px; padding-right: 250px;">Transcription will appear here...</div>
+    <div class="controls">
+        <button onclick="startRecording()">Start Recording</button>
+        <button onclick="stopRecording()">Stop Recording</button>
+    </div>
+    <script>
+        let recognition;
+        let isRecording = false;
+    
+        function startRecording() {
+    recognition = new webkitSpeechRecognition() || new SpeechRecognition();
+    recognition.continuous = true;
+    recognition.interimResults = true;
+
+    recognition.onresult = function (event) {
+        let transcript = '';
+        for (let i = 0; i < event.results.length; i++) {
+            transcript += event.results[i][0].transcript;
+        }
+        document.getElementById('transcription').innerText = transcript;
+    };
+
+    recognition.onerror = function (event) {
+        console.error('Speech recognition error:', event.error);
+    };
+
+    recognition.onend = function () {
+        if (isRecording) {
+            startRecording(); // Restart recognition if still recording
+        }
+    };
+
+    recognition.start();
+    isRecording = true;
+    document.getElementById('transcription').innerText = 'Listening...';
+}
+
+    
+        function stopRecording() {
+            if (recognition) {
+                recognition.stop();
+                isRecording = false;
+                const transcription = document.getElementById('transcription').innerText;
+                document.getElementById('transcription').innerText = 'Recording stopped. Saving transcription...';
+
+                // Send the transcription to the server
+                fetch('transcript_to_database.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'CONVO_BODY=' + encodeURIComponent(transcription)
+                })
+                .then(response => response.text())
+                .then(data => {
+                    console.log(data); // Log the response from the server
+                    document.getElementById('transcription').innerText = 'Transcription saved.';
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    document.getElementById('transcription').innerText = 'Failed to save transcription.';
+                });
+            }
+        }
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>EyeHearYou</title>
+    <meta name="description" content="A minimalist layout for Login pages. Built with Pico CSS." />
+    <link rel="shortcut icon" href="https://picocss.com/favicon.ico" />
+    <link rel="canonical" href="https://picocss.com/examples/sign-in/" />
+
+    <!-- Pico.css -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" />
+
+    <!-- Custom styles for this example -->
+    <link rel="stylesheet" href="custom.css" />
+    
+    <link href="./css/style.css" rel="stylesheet">
+  </head>
+
+  <body>
+    <!-- Nav -->
+    <nav class="container-fluid">
+      <ul>
+        <li>
+          <a href="./" class="contrast" onclick="event.preventDefault()"><strong>Eye Hear You</strong></a>
+        </li>
+      </ul>
+      <ul>
+        <li>
+          <details role="list" dir="rtl">
+            <summary aria-haspopup="listbox" role="link" class="secondary">Theme</summary>
+            <ul role="listbox">
+              <li><a href="#" data-theme-switcher="auto">Auto</a></li>
+              <li><a href="#" data-theme-switcher="light">Light</a></li>
+              <li><a href="#" data-theme-switcher="dark">Dark</a></li>
+            </ul>
+          </details>
+        </li>
+        <li>
+            <!--Nav Bar options-->
+        </li>
+      </ul>
+    </nav>
+    <!-- ./ Nav -->
+
+    <!-- Main -->
+    <main class="container">
+      <article class="grid">
+        <div>
+          <hgroup>
+            <h1>Log In</h1>
+            <h2>Input your credentials</h2>
+          </hgroup>
+          <form method="post" action="login.php">
+            <input
+              type="text"
+              name="login"
+              placeholder="Login"
+              aria-label="Login"
+              autocomplete="nickname"
+              required
+            />
+            <input
+              type="password"
+              name="password"
+              placeholder="Password"
+              aria-label="Password"
+              autocomplete="current-password"
+              required
+            />
+            <fieldset>
+              <label for="remember">
+                <input type="checkbox" role="switch" id="remember" name="remember" />
+                Remember me
+              </label>
+            </fieldset>
+            <button type="submit" class="contrast">Login</button>
+          </form>
+        </div>
+        <div></div>
+      </article>
+    </main>
+    <!-- ./ Main -->
+
+
+    <!-- Minimal theme switcher -->
+    <script src="js/minimal-theme-switcher.js"></script>
+  </body>
+</html>
